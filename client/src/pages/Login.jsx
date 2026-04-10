@@ -15,6 +15,7 @@ export default function Login() {
       const res = await api.post("/auth/login", form);
 
       localStorage.setItem("token", res.data.token);
+      localStorage.setItem("email", res.data.user.email);
 
       // ✅ Show popup
       setSuccess(true);

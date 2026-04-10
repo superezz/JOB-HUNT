@@ -5,6 +5,7 @@ export default function ProjectAnalyzer() {
   const [description, setDescription] = useState("");
   const [result, setResult] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [allSkills, setAllSkills] = useState([]);
 
   const analyzeProject = async () => {
     try {
@@ -12,14 +13,29 @@ export default function ProjectAnalyzer() {
 
       const res = await api.post("/project/analyze", {
         description,
+        email: localStorage.getItem("email"),
       });
 
       setResult(res.data);
+
+      // 🔥 FETCH UPDATED SKILLS
+      await fetchSkills();
     } catch (err) {
       console.log(err);
       alert("Error analyzing project");
     } finally {
       setLoading(false);
+    }
+  };
+
+  const fetchSkills = async () => {
+    try {
+      const res = await api.get(
+        `/user/skills/${localStorage.getItem("email")}`,
+      );
+      setAllSkills(res.data.skills);
+    } catch (err) {
+      console.log("Skill fetch error", err);
     }
   };
 
@@ -78,6 +94,18 @@ export default function ProjectAnalyzer() {
             ))}
           </div>
         )}
+        <div className="mt-6">
+          <h3 className="font-bold">Your Total Skills:</h3>
+
+          {allSkills.map((skill, i) => (
+            <span
+              key={i}
+              className="bg-purple-200 px-2 py-1 m-1 inline-block rounded"
+            >
+              {skill}
+            </span>
+          ))}
+        </div>
       </div>
     </div>
   );

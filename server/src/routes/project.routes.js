@@ -2,21 +2,42 @@ const express = require("express");
 const router = express.Router();
 
 const { analyzeProjectAI } = require("../services/ai.service");
+const User = require("../models/User");
 
 router.post("/analyze", async (req, res) => {
   try {
-    const { description } = req.body;
+    const { description, email } = req.body;
 
-    if (!description) {
-      return res.status(400).json({ error: "Description required" });
+    // ❗ Safety check
+    if (!description || !email) {
+      return res.status(400).json({ error: "Missing data" });
     }
 
-    const result = await analyzeProjectAI(description);
+    // 🧠 AI analyze
+    const aiResult = await analyzeProjectAI(description);
 
-    res.json(result);
+    // 🔍 Find user
+    const user = await User.findOne({ email });
+
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    // 💾 Save project
+    user.projects.push({
+      description,
+      techStack: aiResult.technologies || [],
+      extractedSkills: aiResult.skills || [],
+    });
+
+    await user.save();
+
+    // ✅ Send response
+    res.json(aiResult);
+
   } catch (err) {
-    console.error("❌ AI ERROR:", err.message);
-    res.status(500).json({ error: "AI failed" });
+    console.error("❌ SAVE ERROR:", err.message);
+    res.status(500).json({ error: "Failed to analyze & save" });
   }
 });
 
