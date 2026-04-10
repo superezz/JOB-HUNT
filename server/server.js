@@ -6,6 +6,7 @@ const cors = require("cors");
 const connectDB = require("./src/config/db");
 const userRoutes = require("./src/routes/user.routes");
 const jobRoutes = require("./src/routes/job.routes");
+const resumeRoutes = require("./src/routes/resume.routes");
 const authRoutes = require("./src/routes/auth.routes");
 const projectRoutes = require("./src/routes/project.routes");
 
@@ -21,6 +22,7 @@ connectDB();
 // Routes
 app.use("/api/user", userRoutes);
 app.use("/api/jobs", jobRoutes);
+app.use("/api/resume", resumeRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/project", projectRoutes);
 

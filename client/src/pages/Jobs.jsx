@@ -3,6 +3,7 @@ import api from "../services/api";
 
 export default function Jobs() {
   const [jobs, setJobs] = useState([]);
+  const [resume, setResume] = useState("");
 
   useEffect(() => {
     const fetchJobs = async () => {
@@ -58,9 +59,47 @@ export default function Jobs() {
             <button className="mt-4 w-full bg-black text-white p-2 rounded">
               Apply
             </button>
+            <button
+              onClick={async () => {
+                try {
+                  const email = localStorage.getItem("email");
+
+                  const res = await api.post("/resume/generate", {
+                    email,
+                    jobId: job.id,
+                  });
+
+                  setResume(res.data.resume);
+                } catch (err) {
+                  console.log(err);
+                  alert("Failed to generate resume");
+                }
+              }}
+              className="mt-2 w-full bg-blue-500 text-white p-2 rounded"
+            >
+              Generate Resume
+            </button>
           </div>
         ))}
       </div>
+      {resume && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+          <div className="bg-white p-6 w-[90%] md:w-[600px] rounded-xl shadow-xl max-h-[80vh] overflow-y-auto animate-fadeIn">
+            <h2 className="text-xl font-bold mb-4 text-center">
+              Generated Resume 📄
+            </h2>
+
+            <pre className="text-sm whitespace-pre-wrap">{resume}</pre>
+
+            <button
+              onClick={() => setResume("")}
+              className="mt-4 w-full bg-red-500 text-white p-2 rounded"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
