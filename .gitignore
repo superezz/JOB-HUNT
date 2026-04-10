@@ -1,0 +1,96 @@
+.env
+# =========================
+# 🔐 ENV FILES (SECRETS)
+# =========================
+.env
+.env.*
+!.env.example
+server/.env
+
+# =========================
+# 📦 NODE MODULES
+# =========================
+node_modules/
+client/node_modules/
+server/node_modules/
+
+# =========================
+# 🏗 BUILD / DIST FILES
+# =========================
+dist/
+build/
+client/dist/
+server/dist/
+
+# =========================
+# ⚡ VITE FILES
+# =========================
+client/.vite/
+
+# =========================
+# 🧾 LOG FILES
+# =========================
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# =========================
+# 💻 OS FILES
+# =========================
+.DS_Store
+Thumbs.db
+
+# =========================
+# ⚙️ EDITOR / IDE
+# =========================
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# =========================
+# 🧪 TEST / COVERAGE
+# =========================
+coverage/
+
+# =========================
+# 🔑 CACHE / TEMP FILES
+# =========================
+.cache/
+.tmp/
+.temp/
+
+# =========================
+# 🗄 DATABASE FILES (LOCAL)
+# =========================
+*.sqlite
+*.db
+
+# =========================
+# 🔐 KEYS / CERTIFICATES
+# =========================
+*.pem
+*.key
+secret/
+keys/
+
+# =========================
+# 🚀 NEXT / FUTURE (OPTIONAL)
+# =========================
+.next/
+out/
+
+# =========================
+# 🧠 AI / MODEL FILES (FUTURE)
+# =========================
+models/
+*.pt
+*.onnx
+
+# =========================
+# 📁 UPLOADS (IF YOU ADD)
+# =========================
+uploads/
