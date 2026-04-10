@@ -2,6 +2,7 @@ import { useState } from "react";
 import Register from "./pages/Register";
 import Login from "./pages/Login";
 import ProjectAnalyzer from "./pages/ProjectAnalyzer";
+import Jobs from "./pages/Jobs";
 
 function App() {
   const [page, setPage] = useState("register");
@@ -11,6 +12,7 @@ function App() {
       {page === "register" && <Register />}
       {page === "login" && <Login />}
       {page === "analyzer" && <ProjectAnalyzer />}
+      {page === "jobs" && <Jobs />}
 
       <div className="fixed bottom-5 left-1/2 -translate-x-1/2">
         <button
@@ -29,9 +31,15 @@ function App() {
 
         <button
           onClick={() => setPage("analyzer")}
-          className="px-4 py-2 bg-white rounded"
+          className="mr-2 px-4 py-2 bg-white rounded"
         >
           Analyzer
+        </button>
+        <button
+          onClick={() => setPage("jobs")}
+          className="px-4 py-2 bg-white rounded"
+        >
+          Jobs
         </button>
       </div>
     </>
