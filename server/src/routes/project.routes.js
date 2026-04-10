@@ -1,26 +1,23 @@
 const express = require("express");
 const router = express.Router();
 
-// TEMP basic analyzer
-router.post("/analyze", (req, res) => {
-  const { description } = req.body;
+const { analyzeProjectAI } = require("../services/ai.service");
 
-  const skills = [
-    "react",
-    "node",
-    "mongodb",
-    "docker",
-    "aws",
-    "python",
-    "java",
-    "next.js",
-  ];
+router.post("/analyze", async (req, res) => {
+  try {
+    const { description } = req.body;
 
-  const found = skills.filter(skill =>
-    description.toLowerCase().includes(skill)
-  );
+    if (!description) {
+      return res.status(400).json({ error: "Description required" });
+    }
 
-  res.json({ skills: found });
+    const result = await analyzeProjectAI(description);
+
+    res.json(result);
+  } catch (err) {
+    console.error("❌ AI ERROR:", err.message);
+    res.status(500).json({ error: "AI failed" });
+  }
 });
 
 module.exports = router;

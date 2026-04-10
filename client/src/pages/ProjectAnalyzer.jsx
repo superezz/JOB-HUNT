@@ -3,17 +3,23 @@ import api from "../services/api";
 
 export default function ProjectAnalyzer() {
   const [description, setDescription] = useState("");
-  const [skills, setSkills] = useState([]);
+  const [result, setResult] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   const analyzeProject = async () => {
     try {
+      setLoading(true);
+
       const res = await api.post("/project/analyze", {
         description,
       });
 
-      setSkills(res.data.skills);
-    } catch {
+      setResult(res.data);
+    } catch (err) {
+      console.log(err);
       alert("Error analyzing project");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -35,20 +41,43 @@ export default function ProjectAnalyzer() {
           onClick={analyzeProject}
           className="w-full bg-black text-white p-3 rounded-lg"
         >
-          Analyze
+          {loading ? "Analyzing..." : "Analyze"}
         </button>
 
-        {/* Output */}
-        <div className="mt-4">
-          {skills.map((skill, i) => (
-            <span
-              key={i}
-              className="inline-block bg-green-200 px-2 py-1 rounded mr-2 mt-2"
-            >
-              {skill}
-            </span>
-          ))}
-        </div>
+        {/* OUTPUT */}
+        {result && (
+          <div className="mt-4 text-sm">
+            <h3 className="font-bold">Technologies:</h3>
+            {result.technologies?.map((t, i) => (
+              <span
+                key={i}
+                className="bg-blue-200 px-2 py-1 m-1 inline-block rounded"
+              >
+                {t}
+              </span>
+            ))}
+
+            <h3 className="font-bold mt-3">Tools:</h3>
+            {result.tools?.map((t, i) => (
+              <span
+                key={i}
+                className="bg-yellow-200 px-2 py-1 m-1 inline-block rounded"
+              >
+                {t}
+              </span>
+            ))}
+
+            <h3 className="font-bold mt-3">Skills:</h3>
+            {result.skills?.map((s, i) => (
+              <span
+                key={i}
+                className="bg-green-200 px-2 py-1 m-1 inline-block rounded"
+              >
+                {s}
+              </span>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );

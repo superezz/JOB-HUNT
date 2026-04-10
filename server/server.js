@@ -9,32 +9,25 @@ const projectRoutes = require("./src/routes/project.routes");
 
 const app = express();
 
-// ✅ Middleware
+// Middleware
 app.use(cors());
 app.use(express.json());
 
-// ✅ Connect Database
+// DB
 connectDB();
 
-// ✅ Routes
+// Routes
 app.use("/api/auth", authRoutes);
 app.use("/api/project", projectRoutes);
 
-// ✅ Health Check Route
+// Health check
 app.get("/", (req, res) => {
   res.send("API Running 🚀");
 });
 
-// ✅ Port Fix (IMPORTANT)
+// Port
 const PORT = process.env.PORT || 5001;
 
-// ✅ Start Server
 app.listen(PORT, () => {
   console.log(`🚀 Server running on http://localhost:${PORT}`);
-});
-
-// ❌ Error Handler
-app.use((err, req, res, next) => {
-  console.error(err.message);
-  res.status(500).json({ error: "Server Error" });
 });
