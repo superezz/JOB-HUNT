@@ -57,8 +57,20 @@ export default function Jobs() {
             </div>
 
             {/* APPLY */}
-            <button className="mt-4 w-full bg-black text-white p-2 rounded">
-              Apply
+            <button
+              onClick={async () => {
+                const email = localStorage.getItem("email");
+
+                await api.post("/jobs/queue", {
+                  email,
+                  job,
+                });
+
+                alert("Added to Apply Queue 🚀");
+              }}
+              className="mt-2 w-full bg-black text-white p-2 rounded"
+            >
+              Add to Queue
             </button>
 
             {/* GENERATE RESUME */}
