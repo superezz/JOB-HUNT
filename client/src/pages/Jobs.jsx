@@ -8,9 +8,7 @@ export default function Jobs() {
   useEffect(() => {
     const fetchJobs = async () => {
       const email = localStorage.getItem("email");
-
       const res = await api.get(`/jobs/match/${email}`);
-
       setJobs(res.data);
     };
 
@@ -32,6 +30,7 @@ export default function Jobs() {
 
             <p className="mt-2 text-green-600 font-bold">Match: {job.score}%</p>
 
+            {/* MATCHED */}
             <div className="mt-2">
               <p className="text-sm font-semibold">Matched:</p>
               {job.matched.map((s, i) => (
@@ -44,6 +43,7 @@ export default function Jobs() {
               ))}
             </div>
 
+            {/* MISSING */}
             <div className="mt-2">
               <p className="text-sm font-semibold">Missing:</p>
               {job.missing.map((s, i) => (
@@ -56,9 +56,12 @@ export default function Jobs() {
               ))}
             </div>
 
+            {/* APPLY */}
             <button className="mt-4 w-full bg-black text-white p-2 rounded">
               Apply
             </button>
+
+            {/* GENERATE RESUME */}
             <button
               onClick={async () => {
                 try {
@@ -79,9 +82,48 @@ export default function Jobs() {
             >
               Generate Resume
             </button>
+
+            {/* ✅ DOWNLOAD PDF (FIXED) */}
+            <button
+              onClick={async () => {
+                try {
+                  const email = localStorage.getItem("email");
+
+                  const res = await fetch(
+                    "http://localhost:5001/api/resume/download",
+                    {
+                      method: "POST",
+                      headers: {
+                        "Content-Type": "application/json",
+                      },
+                      body: JSON.stringify({
+                        email,
+                        jobId: job.id,
+                      }),
+                    },
+                  );
+
+                  const blob = await res.blob();
+                  const url = window.URL.createObjectURL(blob);
+
+                  const a = document.createElement("a");
+                  a.href = url;
+                  a.download = "resume.pdf";
+                  a.click();
+                } catch (err) {
+                  console.log(err);
+                  alert("Download failed");
+                }
+              }}
+              className="mt-2 w-full bg-green-500 text-white p-2 rounded"
+            >
+              Download Resume
+            </button>
           </div>
         ))}
       </div>
+
+      {/* MODAL */}
       {resume && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
           <div className="bg-white p-6 w-[90%] md:w-[600px] rounded-xl shadow-xl max-h-[80vh] overflow-y-auto animate-fadeIn">

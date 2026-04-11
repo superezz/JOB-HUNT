@@ -3,6 +3,7 @@ import Register from "./pages/Register";
 import Login from "./pages/Login";
 import ProjectAnalyzer from "./pages/ProjectAnalyzer";
 import Jobs from "./pages/Jobs";
+import Skills from "./pages/Skills";
 
 function App() {
   const [page, setPage] = useState("register");
@@ -13,6 +14,7 @@ function App() {
       {page === "login" && <Login />}
       {page === "analyzer" && <ProjectAnalyzer />}
       {page === "jobs" && <Jobs />}
+      {page === "skills" && <Skills />}
 
       <div className="fixed bottom-5 left-1/2 -translate-x-1/2">
         <button
@@ -34,6 +36,13 @@ function App() {
           className="mr-2 px-4 py-2 bg-white rounded"
         >
           Analyzer
+        </button>
+
+        <button
+          onClick={() => setPage("skills")}
+          className="mr-2 px-4 py-2 bg-white rounded"
+        >
+          Skills
         </button>
         <button
           onClick={() => setPage("jobs")}

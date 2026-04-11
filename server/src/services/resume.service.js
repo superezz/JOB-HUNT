@@ -7,8 +7,35 @@ const ai = new GoogleGenAI({
 exports.generateResumeAI = async (user, job) => {
   try {
     const prompt = `
-Generate a professional ATS-friendly resume.
+Create a ONE-PAGE professional ATS-friendly resume.
 
+STRICT RULES:
+- Maximum 250–300 words
+- No long paragraphs
+- Use bullet points
+- Keep it concise and clean
+- Focus on relevant skills for the job
+
+FORMAT:
+
+------------------------
+Name
+Email
+
+SUMMARY (2-3 lines)
+
+SKILLS
+• Skill 1
+• Skill 2
+
+PROJECTS (Max 2 projects)
+Project Title
+• Point
+• Point
+
+------------------------
+
+USER DETAILS:
 Name: ${user.name}
 Email: ${user.email}
 
@@ -16,21 +43,13 @@ Skills:
 ${user.skills?.join(", ") || ""}
 
 Projects:
-${user.projects.map(p => p.description).join("\n")}
+${user.projects?.map((p) => `- ${p.description}`).join("\n") || ""}
 
-Target Job:
+TARGET JOB:
 ${job.title} at ${job.company}
 
-Job Skills:
+JOB SKILLS:
 ${job.skills.join(", ")}
-
-Instructions:
-- Highlight relevant skills
-- Use bullet points
-- ATS optimized
-- Keep concise
-
-Return plain text.
 `;
 
     const response = await ai.models.generateContent({
@@ -38,8 +57,18 @@ Return plain text.
       contents: prompt,
     });
 
-    return response.text;
+    // ✅ FIX: correct way to get text
+    let text = response.text;
 
+    // ✅ SAFETY CLEANUP (important)
+    if (!text) {
+      return "Resume generation failed";
+    }
+
+    // remove weird formatting if any
+    text = text.replace(/```/g, "").trim();
+
+    return text;
   } catch (err) {
     console.error("❌ Resume AI error:", err.message);
     return "Failed to generate resume";

@@ -4,6 +4,7 @@ const router = express.Router();
 const User = require("../models/User");
 const jobs = require("../data/jobs");
 const { generateResumeAI } = require("../services/resume.service");
+const { generatePDF } = require("../services/pdf.service");
 
 router.post("/generate", async (req, res) => {
   try {
@@ -15,7 +16,7 @@ router.post("/generate", async (req, res) => {
       return res.status(404).json({ error: "User not found" });
     }
 
-    const job = jobs.find(j => j.id === jobId);
+    const job = jobs.find((j) => j.id === jobId);
 
     if (!job) {
       return res.status(404).json({ error: "Job not found" });
@@ -24,10 +25,24 @@ router.post("/generate", async (req, res) => {
     const resume = await generateResumeAI(user, job);
 
     res.json({ resume });
-
   } catch (err) {
     console.error("❌ Resume route error:", err.message);
     res.status(500).json({ error: "Resume generation failed" });
+  }
+});
+router.post("/download", async (req, res) => {
+  try {
+    const { email, jobId } = req.body;
+
+    const user = await User.findOne({ email });
+    const job = jobs.find((j) => j.id === jobId);
+
+    const resume = await generateResumeAI(user, job);
+
+    generatePDF(resume, res);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "PDF generation failed" });
   }
 });
 
